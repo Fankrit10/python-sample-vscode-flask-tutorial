@@ -1,34 +1,33 @@
+# Archivo: azure-pipelines.yml
+
 trigger:
-- main
+- main  # O el nombre de la rama que quieres que dispare el pipeline
 
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  pythonVersion: '3.8'  # Ajusta esto a la versión de Python que necesitas
+
 steps:
-- script: echo "Hola, mundo!"
-  displayName: 'Ejecutar un script de una línea'
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '$(pythonVersion)'
+    addToPath: true
 
 - script: |
-    echo "Agrega otras tareas para construir, probar y desplegar tu proyecto."
-    echo "Ver https://aka.ms/yaml"
-  displayName: 'Ejecutar un script de varias líneas'
-
-- script: |
-    echo "Instalando dependencias..."
-    yarn install
+    python -m venv venv
+    source venv/bin/activate
+    python -m pip install --upgrade pip
+    pip install -r requirements.txt
   displayName: 'Instalar dependencias'
 
 - script: |
-    echo "Construyendo el proyecto..."
-    yarn build
-  displayName: 'Construir proyecto'
-
-- script: |
-    echo "Ejecutando pruebas..."
-    yarn test
+    source venv/bin/activate
+    python -m pytest
   displayName: 'Ejecutar pruebas'
 
 - script: |
-    echo "Desplegando la aplicación..."
-    # Aquí añadirías los comandos para desplegar tu aplicación
-  displayName: 'Desplegar aplicación'
+    source venv/bin/activate
+    python app/run.py
+  displayName: 'Ejecutar aplicación Flask'
