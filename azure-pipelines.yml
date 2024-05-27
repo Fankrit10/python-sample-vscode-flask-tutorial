@@ -29,5 +29,5 @@ steps:
 
 - script: |
     source venv/bin/activate
-    python app/run.py
+    python run.py
   displayName: 'Ejecutar aplicación Flask'
